@@ -1,0 +1,18 @@
+{% block _post %}
+
+<div class="card mb-4">
+    <div class="card-body" id="post-{{ post.id }}">
+        <h2 class="card-title">{{ post.title }}</h2>
+        <p class="card-text">{{ post.description }}</p>
+        <a href="{{ url_for('main.post', post_id=post.id)}}" class="btn btn-primary">Read More &rarr;</a>
+    </div>
+    <div class="card-footer text-muted">
+        Posted on {{ moment(post.timestamp).format('MMMM Do YYYY, h:mm:ss a') }}
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+<!-- <a href="{({ url_for(user, username=post.author.username) })}">{({ post.author.username })}</a> -->

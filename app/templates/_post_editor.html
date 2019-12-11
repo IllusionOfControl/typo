@@ -1,0 +1,23 @@
+{% block _post_editor %}
+
+<form enctype="multipart/form-data" method="POST">
+    {{ form.csrf_token }}
+    <h5>{{ form.title.label }}</h5>
+    {{ form.title(class_="form-control form-post-title", rows=1) }}
+    <br>
+    <h5>{{ form.description.label }}</h5>
+    {{ form.description(class_="form-control form-post-description", rows=6) }}
+    <br>
+    <h5>{{ form.body.label }}</h5>
+    {{ form.body(class_="form-post-body form-control", rows=18) }}
+    <br>
+    <button type="submit" id="submit", name="submit" class="btn btn-primary btn-lg">
+        {% if is_editing == True %}
+            Edit Post
+        {% else %}
+            Create post
+        {% endif %}
+    </button>    
+</form>
+
+{% endblock _post_editor %}
