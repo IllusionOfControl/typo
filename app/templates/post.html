@@ -34,8 +34,8 @@
   </div>
 
   <div class="btn-group ml-auto py-1 px-1 justify-content-end" role="group" aria-label="">
-    <button type="button" class="btn btn-primary" id="btn-post-edit">Edit</button>
-    <button type="button" class="btn btn-primary" id="btn-post-delete">Delete</button>
+    <a class="btn btn-primary" href="{{ url_for('main.post_edit', post_id=post.id) }}">Edit</a>
+    <a class="btn btn-primary" href="{{ url_for('main.post_delete', post_id=post.id) }}">Delete</a>
   </div>
 </div>
 

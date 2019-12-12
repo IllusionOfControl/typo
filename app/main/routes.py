@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 from app import db
 from app.models import Post
 from app.main import bp
@@ -46,10 +46,16 @@ def post_add():
                     body=form.body.data)
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for('post', post_id=post.id))
+        return redirect(url_for('main.post', post_id=post.id))
     return render_template('post_create.html', form=form)
 
-
-@bp.route('/base')
-def base():
-    return render_template('base.html')
+@bp.route('/post/<int:post_id>/delete')
+def post_delete(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    if not post:
+        flash('There is no post to delete')
+        return redirect(url_for('main.index'))
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post was deleted')
+    return redirect(url_for('main.index'))
