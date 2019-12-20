@@ -6,4 +6,3 @@ class EditPostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=128)])
     description = TextAreaField('Description', validators=[])
     body = TextAreaField('Body', validators=[])
-    submit = SubmitField()

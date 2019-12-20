@@ -20,4 +20,12 @@ def create_app(config=Config):
     from app.main import bp as bp_main
     app.register_blueprint(bp_main)
 
+    from app.errors import (
+        forbidden,
+        page_not_found,
+        general_error,
+    )
+    app.register_error_handler(403, forbidden)
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(502, general_error)
     return app

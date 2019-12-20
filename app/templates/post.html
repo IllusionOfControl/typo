@@ -8,13 +8,13 @@
   <!-- Author -->
   <p class="lead">
     by
-    <a href="#">Start Bootstrap</a>
+    <a href="#">%username%</a>
   </p>
 
   <hr>
 
   <!-- Date/Time -->
-  <p>Posted on {{ post.timestamp }}</p>
+  <p>Posted on {{ moment(post.timestamp).format('MMMM Do YYYY, h:mm:ss a') }}</p>
 
   <hr>
 
