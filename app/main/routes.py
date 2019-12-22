@@ -1,8 +1,14 @@
 from flask import render_template, redirect, url_for, flash
-from app import db
-from app.models import Post
+from app.models import db, Post
 from app.main import bp
 from app.main.forms import EditPostForm
+
+
+@bp.route('/')
+@bp.route('/index')
+def index():
+    posts = Post.query.all()
+    return render_template('index.html', posts=posts)
 
 
 @bp.route('/post/<int:post_id>/edit', methods=['GET','POST'])
@@ -21,12 +27,6 @@ def post_edit(post_id):
     form.description.data = post.description
     form.body.data = post.body
     return render_template('post_edit.html', form=form, edit=True)
-
-@bp.route('/')
-@bp.route('/index')
-def index():
-    posts = Post.query.all()
-    return render_template('index.html', posts=posts)
 
 
 @bp.route('/post/<post_id>')
@@ -49,6 +49,7 @@ def post_add():
         return redirect(url_for('main.post', post_id=post.id))
     return render_template('post_create.html', form=form)
 
+
 @bp.route('/post/<int:post_id>/delete')
 def post_delete(post_id):
     post = Post.query.filter_by(id=post_id).first()
@@ -59,3 +60,16 @@ def post_delete(post_id):
     db.session.commit()
     flash('Post was deleted')
     return redirect(url_for('main.index'))
+
+
+@bp.route('/users')
+def users():
+    raise NotImplementedError
+
+@bp.route('/user/<int:user_id>')
+def user(user_id):
+    raise NotImplementedError
+
+@bp.route('/about')
+def about():
+    raise NotImplementedError

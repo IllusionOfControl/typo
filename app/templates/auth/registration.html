@@ -1,0 +1,24 @@
+{% set hidden_widgets = True %}
+{% set title = "Registration" %}
+{% extends 'base.html' %}
+
+{% block content %}
+<form enctype="multipart/form-data" method="POST">
+    {{ form.csrf_token }}
+    <label>{{ form.username.label }}</label>
+    {{ form.username(class_="form-control") }}
+    <br>
+    <label>{{ form.email.label }}</label>
+    {{ form.email(class_="form-control") }}
+    <br>
+    <label>{{ form.password.label }}</label>
+    {{ form.password(class_="form-control") }}
+    <br>
+    <label>{{ form.confirm.label }}</label>
+    {{ form.confirm(class_="form-control") }}
+    <br>
+    <button type="submit" id="submit", name="submit" class="btn btn-primary btn-lg">
+        Log In
+    </button>    
+</form>
+{% endblock %}
