@@ -1,4 +1,5 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
+from flask_login import current_user
 from app.models import db, Post
 from app.main import bp
 from app.main.forms import EditPostForm
@@ -14,13 +15,13 @@ def index():
 @bp.route('/post/<int:post_id>/edit', methods=['GET','POST'])
 def post_edit(post_id):
     form = EditPostForm()
-    if form.validate_on_submit():
-        post = Post.query.filter_by(id=post_id).first_or_404()
-        post.title = form.title.data
-        post.description = form.description.data
-        post.body = form.body.data
-        db.session.commit()
-        return redirect(url_for('post', post_id=post_id))
+    post = Post.query.filter_by(id=post_id).first_or_404()
+    if form.validate and request.method=='POST':
+        post.update(
+            title = form.title.data,
+            description = form.description.data,
+            body = form.body.data)
+        return redirect(url_for('main.post', post_id=post.id))
     post = Post.query.filter_by(id=post_id).first_or_404()
     
     form.title.data = post.title
@@ -34,6 +35,7 @@ def post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
     return render_template('post.html', post=post)
 
+
 from app.main.forms import EditPostForm
 
 
@@ -41,11 +43,10 @@ from app.main.forms import EditPostForm
 def post_add():
     form = EditPostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data,
+        post = Post.create(title=form.title.data,
                     description=form.description.data,
-                    body=form.body.data)
-        db.session.add(post)
-        db.session.commit()
+                    body=form.body.data,
+                    author=current_user)
         return redirect(url_for('main.post', post_id=post.id))
     return render_template('post_create.html', form=form)
 
@@ -56,8 +57,7 @@ def post_delete(post_id):
     if not post:
         flash('There is no post to delete')
         return redirect(url_for('main.index'))
-    db.session.delete(post)
-    db.session.commit()
+    post.delete()
     flash('Post was deleted')
     return redirect(url_for('main.index'))
 

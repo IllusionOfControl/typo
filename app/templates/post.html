@@ -8,7 +8,7 @@
   <!-- Author -->
   <p class="lead">
     by
-    <a href="#">%username%</a>
+    <a href="{{ url_for('main.user', user_id = post.user_id) }}">{{ post.author.username }}</a>
   </p>
 
   <hr>
@@ -32,11 +32,12 @@
     <button type="button" class="btn btn-primary" id="btn-post-like">Like</button>
     <button type="button" class="btn btn-primary" id="btn-post-dislike">Dislike</button>
   </div>
-
+  {% if post.author == current_user %}
   <div class="btn-group ml-auto py-1 px-1 justify-content-end" role="group" aria-label="">
     <a class="btn btn-primary" href="{{ url_for('main.post_edit', post_id=post.id) }}">Edit</a>
     <a class="btn btn-primary" href="{{ url_for('main.post_delete', post_id=post.id) }}">Delete</a>
   </div>
+  {% endif %}
 </div>
 
 <hr>
