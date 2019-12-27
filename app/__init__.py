@@ -33,8 +33,10 @@ def create_app(config=Config):
         forbidden,
         page_not_found,
         general_error,
+        not_implemented
     )
     app.register_error_handler(403, forbidden)
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, general_error)
+    app.register_error_handler(501, not_implemented)
     return app

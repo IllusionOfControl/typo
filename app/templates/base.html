@@ -15,6 +15,9 @@
   <!-- Custom styles for this template -->
   <link href="{{ url_for('static', filename='css/blog.css') }}" rel="stylesheet">
 
+  {% block additional_stylesheets %}
+  {% endblock %}
+
 </head>
 
 <body>
@@ -80,15 +83,32 @@
                     {{ title }}
                   {% endif %}
                 </h1>
-                {% with messages = get_flashed_messages() %}
+                {% with messages = get_flashed_messages(with_categories=True) %}
                 {% if messages %}
-                  {% for message in messages %}
-                    <div class="alert alert-primary" role="alert">
+                  {% for category, message in messages %}
+                    {% if category == 'info' %}
+                        <div class="alert alert-info" role="alert">
+                          {{ message }}
+                        </div>
+                    {% endif %}
+                    {% if category == 'message' %}
+                      <div class="alert alert-primary" role="alert">
+                        {{ message }}
+                      </div>
+                    {% endif %}
+                    {% if category == 'warning' %}
+                      <div class="alert alert-warning" role="alert">
+                        {{ message }}
+                      </div>
+                    {% endif %}
+                    {% if category == 'error' %}
+                    <div class="alert alert-error" role="alert">
                       {{ message }}
                     </div>
+                    {% endif %}
                   {% endfor %}
                 {% endif %}
-              {% endwith %}
+                {% endwith %}
 
                 {% block content %}
                 {% endblock %}
@@ -97,6 +117,7 @@
         
               <!-- Sidebar Widgets Column -->
               <div class="col-md-4">
+                
                 {% if not hidden_widgets %}
                 <!-- Search Widget -->
                 <div class="card my-4">
@@ -169,5 +190,8 @@
           <!-- Other JavaScript -->
           <script src="{{ url_for('static', filename='js/monologue.js') }}"></script>
           {{ moment.include_moment() }}
+
+          {% block additional_scripts %}{% endblock %}
+
 </body>
 </html>

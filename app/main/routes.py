@@ -1,8 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import current_user
+from flask_login import current_user, login_required
 from app.models import db, Post
 from app.main import bp
 from app.main.forms import EditPostForm
+from app.utils.decorators import route_not_implemented
 
 
 @bp.route('/')
@@ -55,21 +56,25 @@ def post_add():
 def post_delete(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if not post:
-        flash('There is no post to delete')
+        flash('There is no post to delete', category='info')
         return redirect(url_for('main.index'))
     post.delete()
-    flash('Post was deleted')
+    flash('Post was deleted', category='message')
     return redirect(url_for('main.index'))
 
 
 @bp.route('/users')
+@route_not_implemented
 def users():
-    raise NotImplementedError
+    pass
+
 
 @bp.route('/user/<int:user_id>')
+@route_not_implemented
 def user(user_id):
-    raise NotImplementedError
+    pass
 
 @bp.route('/about')
+@route_not_implemented
 def about():
-    raise NotImplementedError
+    pass
