@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required
-from app.models import db, Post
+from app.models import db, Post, User
 from app.main import bp
 from app.main.forms import EditPostForm
-from app.utils.decorators import route_not_implemented
+from app.utils.decorators import route_not_implemented, author_only
 
 
 @bp.route('/')
@@ -14,6 +14,8 @@ def index():
 
 
 @bp.route('/post/<int:post_id>/edit', methods=['GET','POST'])
+@login_required
+@author_only
 def post_edit(post_id):
     form = EditPostForm()
     post = Post.query.filter_by(id=post_id).first_or_404()
@@ -41,6 +43,7 @@ from app.main.forms import EditPostForm
 
 
 @bp.route('/post/add', methods=['GET', 'POST'])
+@login_required
 def post_add():
     form = EditPostForm()
     if form.validate_on_submit():
@@ -53,6 +56,8 @@ def post_add():
 
 
 @bp.route('/post/<int:post_id>/delete')
+@login_required
+@author_only
 def post_delete(post_id):
     post = Post.query.filter_by(id=post_id).first()
     if not post:

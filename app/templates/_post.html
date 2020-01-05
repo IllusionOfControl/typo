@@ -7,7 +7,8 @@
         <a href="{{ url_for('main.post', post_id=post.id)}}" class="btn btn-primary">Read More &rarr;</a>
     </div>
     <div class="card-footer text-muted">
-        Posted on {{ moment(post.timestamp).format('MMMM Do YYYY, h:mm:ss a') }}
+        Posted on {{ moment(post.timestamp).format('MMMM Do YYYY, h:mm:ss a') }},
+        by <a href="{{ url_for('main.user', user_id=post.author.id) }}">{{ post.author.username }}</a>
     </div>
 </div>
 
