@@ -1,0 +1,10 @@
+- Add user avatars and pages '/users' and '/user' and user profile editor
+- To make possibility of password restore and email handling
+- Add tag output to the widget and selection in the post editor
+- Add user comments, likes and favourites
+- Add app logging
+- Configure WYSIWYG post editor (CKEditor5)
+- To make queue of tasks on Redis
+- Add notifications
+
+- Add tests

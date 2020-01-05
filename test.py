@@ -1,6 +1,6 @@
 import unittest
-from app.models import Tag, Post
-from app import db, create_app
+from monologue.models import Tag, Post
+from monologue import db, create_app
 from config import Config
 
 class TestConfig(Config):

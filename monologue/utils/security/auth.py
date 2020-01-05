@@ -1,5 +1,5 @@
 from flask_login import LoginManager
-from app.models import User
+from monologue.models import User
 
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'

@@ -13,8 +13,8 @@ def create_app(config=Config):
     app = Flask(__name__)
     app.config.from_object(config)
 
-    from app.models import db
-    from app.utils.security.auth import login_manager
+    from monologue.models import db
+    from monologue.utils.security.auth import login_manager
     
     db.init_app(app)
     migrate.init_app(app,db)
@@ -24,12 +24,12 @@ def create_app(config=Config):
     with app.app_context():
         db.create_all()
 
-    from app.main import bp as bp_main
-    from app.auth import bp as bp_auth
+    from monologue.main import bp as bp_main
+    from monologue.auth import bp as bp_auth
     app.register_blueprint(bp_main)
     app.register_blueprint(bp_auth)
 
-    from app.errors import (
+    from monologue.errors import (
         forbidden,
         page_not_found,
         general_error,

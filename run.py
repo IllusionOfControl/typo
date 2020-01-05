@@ -1,5 +1,5 @@
-from app import create_app
-from app.models import db
+from monologue import create_app
+from monologue.models import db
 
 app = create_app()
 app.run(debug=True)

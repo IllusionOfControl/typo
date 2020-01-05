@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for, abort
 from flask_login import current_user
 from functools import wraps
-from app.models import Post
+from monologue.models import Post
 
 
 def author_only(f):

@@ -1,9 +1,10 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required
-from app.models import db, Post, User
-from app.main import bp
-from app.main.forms import EditPostForm
-from app.utils.decorators import route_not_implemented, author_only
+from monologue.models import db, Post, User
+from monologue.main import bp
+from monologue.main.forms import EditPostForm
+from monologue.utils.decorators import route_not_implemented, author_only
+from monologue.main.forms import EditPostForm
 
 
 @bp.route('/')
@@ -37,9 +38,6 @@ def post_edit(post_id):
 def post(post_id):
     post = Post.query.filter_by(id=post_id).first_or_404()
     return render_template('post.html', post=post)
-
-
-from app.main.forms import EditPostForm
 
 
 @bp.route('/post/add', methods=['GET', 'POST'])

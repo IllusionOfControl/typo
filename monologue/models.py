@@ -3,8 +3,8 @@ from flask_login import UserMixin
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from app import login_manager
-from app.utils.crypto import hash_password
+from monologue import login_manager
+from monologue.utils.crypto import hash_password
 from datetime import datetime
 
 db = SQLAlchemy()

@@ -1,14 +1,14 @@
 from flask_login import current_user, login_user, logout_user
 from flask import render_template, redirect, url_for, flash, request
-from app.auth import bp
-from app.auth.forms import (
+from monologue.auth import bp
+from monologue.auth.forms import (
     LoginForm,
     RegistrationForm,
     # ResetPasswordForm,
     # ResetPasswordRequestForm,
 )
-from app.models import User
-from app.utils.decorators import route_not_implemented
+from monologue.models import User
+from monologue.utils.decorators import route_not_implemented
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
