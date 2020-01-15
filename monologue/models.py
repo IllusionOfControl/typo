@@ -1,13 +1,10 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
-
-from monologue import login_manager
+from monologue import login_manager, db
 from monologue.utils.crypto import hash_password
 from datetime import datetime
 
-db = SQLAlchemy()
 
 class CRUDMixin(object):
     """ Mixin that adds methods for CRUD operations. """
@@ -95,3 +92,10 @@ class User(UserMixin, Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+
+from monologue import login_manager
+
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(int(user_id))

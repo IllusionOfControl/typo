@@ -3,23 +3,25 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_moment import Moment
 from flask_login import LoginManager
+from flask_mail import Mail
 from config import Config
 
-login_manager = LoginManager()
+db = SQLAlchemy()
 migrate = Migrate()
+login_manager = LoginManager()
 moment = Moment()
+mail = Mail()
 
 def create_app(config=Config):
     app = Flask(__name__)
     app.config.from_object(config)
-
-    from monologue.models import db
-    from monologue.utils.security.auth import login_manager
     
     db.init_app(app)
     migrate.init_app(app,db)
     moment.init_app(app)
     login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+    mail.init_app(app)
 
     with app.app_context():
         db.create_all()
