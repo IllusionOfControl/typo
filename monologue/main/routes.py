@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required
-from monologue.models import db, Post, User
+from monologue.models import db, Post, User, Category
 from monologue.main import bp
 from monologue.main.forms import EditPostForm
 from monologue.utils.decorators import route_not_implemented, author_only
@@ -11,7 +11,8 @@ from monologue.main.forms import EditPostForm
 @bp.route('/index')
 def index():
     posts = Post.query.all()
-    return render_template('index.html', posts=posts)
+    categories = Category.query.all()
+    return render_template('index.html', posts=posts, categories=categories)
 
 
 @bp.route('/post/<int:post_id>/edit', methods=['GET','POST'])

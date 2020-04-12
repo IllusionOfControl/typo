@@ -50,7 +50,7 @@ class Category(Model):
     name = db.Column(db.String(32))
 
     def __repr__(self):
-        return '<Tag {}>'.format(self.name)
+        return '<Category {}>'.format(self.name)
 
 
 class Post(Model):
@@ -60,14 +60,12 @@ class Post(Model):
     description = db.Column(db.String)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    categories = db.relationship('Category', secondary=post_categories,
-                            primaryjoin=(post_categories.c.post_id == id),
-                            secondaryjoin=(post_categories.c.category_id == Category.id),
-                            lazy='dynamic')
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
     
     def __repr__(self):
         return '<Post {}>'.format(self.title)
+
 
 class User(UserMixin, Model):
     __tablename__ = 'users'
@@ -81,8 +79,7 @@ class User(UserMixin, Model):
     about_me = db.Column(db.String(256))
     website = db.Column(db.String(128))
     banned = db.Column(db.Boolean, default=False)
-    verified = db.Column(db.Boolean, default=False)
-    hidden = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     posts = db.relationship('Post', backref='author', lazy='dynamic')
 
