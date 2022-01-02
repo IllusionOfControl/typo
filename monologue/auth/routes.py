@@ -8,6 +8,7 @@ from monologue.auth.forms import (
     # ResetPasswordRequestForm,
 )
 from monologue.models import User
+from monologue.repositories.user import UserRepository
 from monologue.utils.decorators import route_not_implemented
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -25,12 +26,24 @@ def login():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    user_repo = UserRepository()
+
     if form.validate and request.method == 'POST':
-        User.create(username=form.username.data,
-                    email=form.email.data,
-                    password=form.email.data)
-        flash('Your account has been created. Please log in.')
-        return redirect(url_for('auth.login'))
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+
+        if user_repo.check_username_is_taken(username):
+            flash("Username \"{}\" is taken.".format(username), 'error')
+            return render_template('auth/registration.html', form=form)
+        elif user_repo.check_email_is_taken(email):
+            flash("Email \"{}\" is taken.".format(email), 'error')
+            return render_template('auth/registration.html', form=form)
+
+        user = user_repo.create_user(username, email, password)
+        login_user(user)
+        return redirect(url_for('main.index'))
+
     return render_template('auth/registration.html', form=form)
 
 
