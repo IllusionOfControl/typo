@@ -6,4 +6,4 @@ def hash_password(plaintext):
 
 
 def verify_password(password_hash, plaintext):
-    return bcrypt_sha256.verify(password_hash, plaintext)
+    return bcrypt_sha256.verify(plaintext, password_hash)

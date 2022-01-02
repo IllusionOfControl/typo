@@ -14,12 +14,19 @@ from monologue.utils.decorators import route_not_implemented
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    user_repo = UserRepository()
     if form.validate and request.method == 'POST':
         username = form.username.data
-        user = User.query.filter_by(username=username).first()
-        login_user(user)
-        flash('Login successful', category='message')
-        return redirect(url_for('main.index'))
+        password = form.password.data
+        user = user_repo.get_user_by_username(username)
+        if user:
+            from monologue.utils.crypto import verify_password
+
+            if verify_password(user.password, password):
+                login_user(user)
+                flash('Login successful.', category='message')
+                return redirect(url_for('main.index'))
+        flash('Invalid username or password.', category='message')
     return render_template('auth/login.html', form=form)
 
 
