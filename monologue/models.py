@@ -57,7 +57,6 @@ class Post(Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
-    description = db.Column(db.String)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.String)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
