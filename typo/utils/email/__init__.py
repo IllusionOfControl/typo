@@ -1,4 +1,4 @@
-from monologue import mail
+from typo import mail
 from flask import url_for, current_app
 from flask_mail import Message
 

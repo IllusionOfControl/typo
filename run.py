@@ -1,5 +1,5 @@
-from monologue import create_app
-from monologue.models import db
+from typo import create_app
+from typo.models import db
 
 app = create_app()
 app.run(debug=True)

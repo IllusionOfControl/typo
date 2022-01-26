@@ -12,6 +12,7 @@ login_manager = LoginManager()
 moment = Moment()
 mail = Mail()
 
+
 def create_app(config=Config):
     app = Flask(__name__)
     app.config.from_object(config)
@@ -26,12 +27,12 @@ def create_app(config=Config):
     with app.app_context():
         db.create_all()
 
-    from monologue.main import bp as bp_main
-    from monologue.auth import bp as bp_auth
+    from typo.main import bp as bp_main
+    from typo.auth import bp as bp_auth
     app.register_blueprint(bp_main)
     app.register_blueprint(bp_auth)
 
-    from monologue.errors import (
+    from typo.errors import (
         forbidden,
         page_not_found,
         general_error,

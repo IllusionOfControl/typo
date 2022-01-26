@@ -1,7 +1,7 @@
 from flask import request, redirect, url_for, abort
 from flask_login import current_user
 from functools import wraps
-from monologue.models import Post
+from typo.models import Post
 
 
 def author_only(f):
@@ -20,7 +20,7 @@ def admin_only(f):
 
 def anonymous_only(f):
     @wraps(f)
-    def _anonimous_only(*args, **kwargs):
+    def _anonymous_only(*args, **kwargs):
         return f if current_user.is_anonymous() else redirect(url_for('main.index'))
 
     return _anonimous_only
