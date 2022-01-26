@@ -1,72 +1,46 @@
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
-from monologue import login_manager, db
-from monologue.utils.crypto import hash_password
+from typo import login_manager, db
+from typo.utils.crypto import hash_password
 from datetime import datetime
 
 
-class CRUDMixin(object):
-    """ Mixin that adds methods for CRUD operations. """
-
-    @classmethod
-    def create(cls, **kwargs):
-        instance = cls(**kwargs)
-        return instance.save()
-
-
-    def update(self, commit=True, **kwargs):
-        for attr, value in kwargs.items():
-            setattr(self, attr, value)
-        return commit and self.save()
-
-
-    def delete(self, commit=True):
-        db.session.delete(self)
-        return commit and db.session.commit()
-
-
-    def save(self, commit=True):
-        db.session.add(self)
-        if commit:
-            db.session.commit()
-        return self
-
-
-class Model(CRUDMixin, db.Model):
-    """ Abstract model class that includes CRUD methods"""
-    __abstract__ = True
-
-
-post_categories = db.Table('post_categories',
+post_tags_association_table = db.Table('post_tags_association_table',
     db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
-    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'))
+)
+
+likes_association_table = db.Table('likes_association_table',
+    db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'))
 )
 
 
-class Category(Model):
-    __tablename__ = 'categories'
+class Tag(db.Model):
+    __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
 
     def __repr__(self):
-        return '<Category {}>'.format(self.name)
+        return '<Tag {}>'.format(self.name)
 
 
-class Post(Model):
+class Post(db.Model):
     __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     body = db.Column(db.String)
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    tags = db.relationship("Tag", secondary=post_tags_association_table)
+    who_liked = db.relationship("User", secondary=likes_association_table)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))    
     
     def __repr__(self):
         return '<Post {}>'.format(self.title)
 
 
-class User(UserMixin, Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32))
@@ -90,7 +64,7 @@ class User(UserMixin, Model):
         return '<User {}>'.format(self.username)
 
 
-from monologue import login_manager
+from typo import login_manager
 
 @login_manager.user_loader
 def user_loader(user_id):

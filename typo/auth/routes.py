@@ -1,39 +1,37 @@
 from flask_login import current_user, login_user, logout_user
 from flask import render_template, redirect, url_for, flash, request
-from monologue.auth import bp
-from monologue.auth.forms import (
+from typo.auth import bp
+from typo.auth.forms import (
     LoginForm,
     RegistrationForm,
     # ResetPasswordForm,
     # ResetPasswordRequestForm,
 )
-from monologue.models import User
-from monologue.repositories.user import UserRepository
-from monologue.utils.decorators import route_not_implemented
+from typo.repositories import user as user_repo
+from typo.utils.decorators import route_not_implemented
+
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    user_repo = UserRepository()
     if form.validate and request.method == 'POST':
         username = form.username.data
         password = form.password.data
         user = user_repo.get_user_by_username(username)
         if user:
-            from monologue.utils.crypto import verify_password
+            from typo.utils.crypto import verify_password
 
             if verify_password(user.password, password):
                 login_user(user)
                 flash('Login successful.', category='message')
-                return redirect(url_for('main.index'))
+                return redirect(url_for('main.index')), 200
         flash('Invalid username or password.', category='error')
-    return render_template('auth/login.html', form=form)
+    return render_template('auth/login.html', form=form), 400
 
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
-    user_repo = UserRepository()
 
     if form.validate and request.method == 'POST':
         username = form.username.data
@@ -42,10 +40,11 @@ def register():
 
         if user_repo.check_username_is_taken(username):
             flash("Username \"{}\" is taken.".format(username), 'error')
-            return render_template('auth/registration.html', form=form)
-        elif user_repo.check_email_is_taken(email):
+            return render_template('auth/registration.html', form=form), 400
+
+        if user_repo.check_email_is_taken(email):
             flash("Email \"{}\" is taken.".format(email), 'error')
-            return render_template('auth/registration.html', form=form)
+            return render_template('auth/registration.html', form=form), 400
 
         user = user_repo.create_user(username, email, password)
         login_user(user)
